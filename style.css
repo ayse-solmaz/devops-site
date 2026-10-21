@@ -1,0 +1,4 @@
+cat > style.css << 'EOF'
+body {
+  font-family: sans-serif;
+}
