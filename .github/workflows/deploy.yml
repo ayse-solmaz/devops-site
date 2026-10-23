@@ -1,15 +1,12 @@
 name: Deploy site
-
 on:
   push:
     branches:
       - main
-
 permissions:
   contents: read
   pages: write
   id-token: write
-
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -24,7 +21,6 @@ jobs:
         run: pip install -r requirements.txt
       - name: Test
         run: pytest
-
   deploy:
     needs: test
     runs-on: ubuntu-latest
@@ -34,6 +30,15 @@ jobs:
     steps:
       - name: Get the code
         uses: actions/checkout@v4
+      - name: Check the secret
+        env:
+          SITE_TOKEN: ${{ secrets.SITE_TOKEN }}
+        run: |
+          if [ -z "$SITE_TOKEN" ]; then
+            echo "secret is missing"
+            exit 1
+          fi
+          echo "secret is present"
       - name: Collect the site
         run: |
           mkdir -p _site
